@@ -60,13 +60,24 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ctest --build-config ${{ matrix.build_type }}
 
-    - name: Upload build artifacts
+    - name: Stage artifact
+      shell: bash
+      run: |
+        set -euo pipefail
+        mkdir -p dist
+
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          cp "${{ steps.strings.outputs.build-output-dir }}/Release/vgm2s98.exe" dist/
+        else
+          cp "${{ steps.strings.outputs.build-output-dir }}/vgm2s98" dist/
+        fi
+
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: ${{ github.workflow }}-${{ matrix.os }}-${{ matrix.c_compiler }}-${{ matrix.build_type }}
-        path: |
-          ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.build_type }}/
-          ${{ steps.strings.outputs.build-output-dir }}/**
-        if-no-files-found: warn
+        # short name; zip will be this name
+        name: vgm2s98-${{ runner.os }}
+        path: dist/*
+        if-no-files-found: error
         retention-days: 7
