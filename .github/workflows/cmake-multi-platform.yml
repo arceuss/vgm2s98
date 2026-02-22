@@ -65,19 +65,17 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p dist
-
         if [[ "${{ runner.os }}" == "Windows" ]]; then
-          cp "${{ steps.strings.outputs.build-output-dir }}/Release/vgm2s98.exe" dist/
+          cp "${{ steps.strings.outputs.build-output-dir }}/Release/vgm2s98.exe" "dist/vgm2s98-${{ runner.os }}-${{ matrix.c_compiler }}.exe"
         else
-          cp "${{ steps.strings.outputs.build-output-dir }}/vgm2s98" dist/
+          cp "${{ steps.strings.outputs.build-output-dir }}/vgm2s98" "dist/vgm2s98-${{ runner.os }}-${{ matrix.c_compiler }}"
         fi
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        # short name; zip will be this name
-        name: vgm2s98-${{ runner.os }}
+        name: vgm2s98-${{ runner.os }}-${{ matrix.c_compiler }}
         path: dist/*
         if-no-files-found: error
         retention-days: 7
