@@ -25,8 +25,6 @@ PCM data blocks and stream commands are not converted (S98 has no equivalent).
 
 GD3 tags from the VGM (title, game, artist, year, etc.) are mapped to S98 v3 `[S98]` key=value tags.
 
-If the VGM header contains a non-zero **Volume Modifier** (header offset `0x7C`, added in VGM 1.60), it is stored as the S98 tag `vgm_volume_modifier`. The effective gain factor is `2 ^ (value / 32)` — for example, `+32` doubles the volume, `-32` halves it. S98 has no native gain field, so this tag is informational only.
-
 ## Building
 
 ### CMake (recommended)
@@ -57,3 +55,4 @@ vgm2s98 <input.vgm> <output.s98>
 ```
 
 Progress and diagnostic messages are written to stderr.
+
